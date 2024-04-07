@@ -13,10 +13,15 @@ public:
   //std::vector<std::string> keys;
   std::vector<std::string> keys;
 
+  bool upPressed, downPressed, leftPressed, rightPressed, spacePressed, enterPressed, attackPressed, deletePressed;
+
   KeyHandler();
   ~KeyHandler();
 
   void keyPressed();
+  void vectorKeysPrint();
+  void handleKeyDown(std::string keyName, bool& keyBool);
+  void handleKeyUp(std::string keyName, bool& keyBool);
   void runEventLoop(bool& quit);
 
 };

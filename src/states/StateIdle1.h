@@ -7,13 +7,16 @@
 class StateIdle1 : public States{
 
 public:
-  StateIdle1(GameScreen& gameScreen, KeyHandler& kh);
+  StateIdle1(GameScreen& gameScreen, KeyHandler* kh, Entity& entity,
+    int spriteThreshold, int totalSprites, int baseWidth, int baseHeight,
+    int height, int yStartSubimage, int widthOffset, int widthHitBox,
+    int offsetHitBoxRight, int offsetHitBoxLeft, int stateNumber, int speed,
+    std::string type, std::string pathRight, std::string pathLeft
+  );
   ~StateIdle1();
-  void changeState(int newState, std::string direction);
-  void changeDirection();
-  void inputHandler();
-  void update();
-  void close();
+  void spriteUpdate() override;
+  void inputHandler() override;
+  void close() override;
 };
 
 #endif

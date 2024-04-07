@@ -1,9 +1,14 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
+#include <filesystem>
+#include "../utils.h"
 
 #ifndef GAMESCREEN_H
 #define GAMESCREEN_H
+
+class Utils;
 
 class GameScreen{
 public:
@@ -13,6 +18,11 @@ public:
 
   //The window renderer
   SDL_Renderer* gRenderer;
+
+  //font
+  TTF_Font* font;
+
+  Utils* utils;
 
   //constructor
   GameScreen();

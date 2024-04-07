@@ -1,47 +1,83 @@
 #include "StateIdle1.h"
+#include "../entity/entity.h"
 #include <algorithm>
 
-StateIdle1::StateIdle1(GameScreen& gameScreen, KeyHandler& kh) : States(gameScreen, kh){
-  //basic characteristics
-  spriteThreshold = 4;
-  totalSprites = 8;
-  //sheetWidth = 1024;
-  //sheetHeight=128;
-  sheetWidth = 0;
-  sheetHeight= 0;
-  dividedWidth = sheetWidth/totalSprites;
+StateIdle1::StateIdle1(GameScreen& gameScreen, 
+  KeyHandler* kh, 
+  Entity& entity,
+  int spriteThreshold, int totalSprites, int baseWidth, int baseHeight,
+  int height, int yStartSubimage, int widthOffset, int widthHitBox,
+  int offsetHitBoxRight, int offsetHitBoxLeft, int stateNumber, int speed,
+  std::string type, std::string pathRight, std::string pathLeft) 
+  : States(gameScreen, kh, entity,   
+    spriteThreshold, totalSprites, baseWidth, baseHeight,
+    height, yStartSubimage, widthOffset, widthHitBox,
+    offsetHitBoxRight, offsetHitBoxLeft, stateNumber, speed,
+    type, pathRight, pathLeft){
 
-  height = 73;
-  yStartSubimage = 55;
-
-  widthOffset = 0;
-  width = dividedWidth;
-
-  spriteSheet = utils.loadTexture("../../res/player/ChibiMale/Swordsman/Idle.png", gameScreen.gRenderer, sheetWidth, sheetHeight);
 }
 
 void StateIdle1::inputHandler(){
-  if(std::find(kh.keys.begin(), kh.keys.end(), "left")!= kh.keys.end()){
-  }
-  if(std::find(kh.keys.begin(), kh.keys.end(), "right")!= kh.keys.end()){
+  if(kh != nullptr){
+    if(std::find(kh->keys.begin(), kh->keys.end(), "left")!= kh->keys.end()){
+      entity.changeState(entity.AvailableStates::Walk,entity.direction);
+    }
+    else if(std::find(kh->keys.begin(), kh->keys.end(), "right")!= kh->keys.end()){
+      entity.changeState(entity.AvailableStates::Walk,entity.direction);
+    }
+    else if(((std::find(kh->keys.begin(), kh->keys.end(), "space")!= kh->keys.end()) 
+        && (std::find(kh->keys.begin(), kh->keys.end(), "right")!= kh->keys.end())) 
+        || ((std::find(kh->keys.begin(), kh->keys.end(), "space")!= kh->keys.end()) 
+        && (std::find(kh->keys.begin(), kh->keys.end(), "left")!= kh->keys.end()))){
+      entity.changeState(entity.AvailableStates::Run,entity.direction);
+    }
+    else if(std::find(kh->keys.begin(), kh->keys.end(), "attack")!= kh->keys.end()){
+      entity.changeState(entity.AvailableStates::Attack_1,entity.direction);
+    }
+    else if(std::find(kh->keys.begin(), kh->keys.end(), "up")!= kh->keys.end()){
+      entity.changeState(entity.AvailableStates::Jump, entity.direction);
+    }
+  }else{
+    double rand = gameScreen.utils->random();
+    int nextState = -1;
+    if(rand<0.01){
+      nextState = entity.AvailableStates::Walk;
+    }
+    else if(0.11<rand && rand<0.12){
+      nextState = entity.AvailableStates::Run;
+    }
+    else if(0.21<rand && rand<0.22){
+      nextState = entity.AvailableStates::Jump;
+    }
+    else if(0.31<rand && rand<0.32){
+      nextState = entity.AvailableStates::Attack_1;
+    }
+    else if(0.41<rand && rand<0.42){
+      nextState = entity.AvailableStates::Attack_2;
+    }
+    else if(0.51<rand && rand<0.52){
+      nextState = entity.AvailableStates::Attack_3;
+    }
+    if(nextState>=0 && (entity.stateList[nextState] != nullptr) ){
+      entity.changeState(nextState, entity.direction);
+    }
   }
 }
 
-void StateIdle1::changeState(int newState, std::string direction){
-
-}
-
-void StateIdle1::update(){
-  frame++;
+void StateIdle1::spriteUpdate(){
   int maxSprites = totalSprites-1;
-  if(frame>spriteThreshold){
-    
+  frameCounter++;
+  if(frameCounter>maxSprites){
+    frameCounter=0;
+    stateCounter++;
+  }
+  if(stateCounter>2 && type == "player"){
+    entity.changeState(entity.AvailableStates::Idle_2,entity.direction);
   }
 }
 
 void StateIdle1::close(){
-  SDL_DestroyTexture(spriteSheet);
-  spriteSheet = NULL;
+  States::close();
 }
 
 StateIdle1::~StateIdle1(){}

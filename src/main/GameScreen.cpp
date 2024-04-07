@@ -5,6 +5,10 @@ GameScreen::GameScreen() : SCREEN_WIDTH(700), SCREEN_HEIGHT(500){
   window = NULL;
   //The surface contained by the window
   gRenderer = NULL;
+
+  font = NULL;
+
+  utils = new Utils();
 }
 
 //SDL_Window* is a pointer to a window
@@ -18,6 +22,13 @@ bool GameScreen::init(){
   if(SDL_Init(SDL_INIT_VIDEO)<0){
     //SDL_GetError will let you know if any errors happened inside of any SDL function. 
     printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+    success = false;
+    return success;
+  }
+
+  //Initialize sdl_ttf
+  if (TTF_Init() == -1) {
+    printf( "SDL_ttf could not initialize! error: %s\n", SDL_GetError() );
     success = false;
     return success;
   }
@@ -58,6 +69,15 @@ bool GameScreen::init(){
     return success;
 	}
 
+  std::string path = std::filesystem::current_path().string();
+  path += "/res/font/Roboto/Roboto-Black.ttf";
+  font = TTF_OpenFont(path.c_str(), 24);
+  if(!font){
+		printf( "Could not get font. Font error\n");
+    success = false;
+    return success;
+  }
+
   return success;
 }
 
@@ -69,12 +89,15 @@ void GameScreen::close(){
   //Destroy screenSurface
   SDL_DestroyWindow(window);
   SDL_DestroyRenderer(gRenderer);
-  window = NULL;
-  gRenderer = NULL;
+  window = nullptr;
+  gRenderer = nullptr;
+  utils = nullptr;
+  font = nullptr;
 
   //Quit sdl subsystems
   IMG_Quit();
   SDL_Quit();
+  TTF_Quit();
 }
 
 GameScreen::~GameScreen(){}

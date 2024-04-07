@@ -1,0 +1,3 @@
+/media/axl/01D4BB489872B240/Coding/ccpp/cpp/VSCGames/CMAKEGAMES/testGame/build/CMakeFiles/ejecutable.dir
+/media/axl/01D4BB489872B240/Coding/ccpp/cpp/VSCGames/CMAKEGAMES/testGame/build/CMakeFiles/edit_cache.dir
+/media/axl/01D4BB489872B240/Coding/ccpp/cpp/VSCGames/CMAKEGAMES/testGame/build/CMakeFiles/rebuild_cache.dir
